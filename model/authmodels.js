@@ -1,72 +1,129 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const userSchema = new mongoose.Schema({
-  full_name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-  },
-  phone_number: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  date_of_birth: {
-    type: Date,
-    required: true,
-  },
-  gender: {
-    type: String,
-    required: true,
-    enum: ["male", "female"],
-  },
-  profile_picture: {
-    type: String,
-  },
-  bio: {
-    type: String,
-  },
-  interests: {
-    type: [String],
-  },
-  location: {
-    type: {
+const UserSchema = new Schema(
+  {
+    username: {
       type: String,
-      enum: ["Point"],
-      required: false,
+      required: true,
+      unique: true,
     },
-    coordinates: {
-      type: [Number],
-      required: false,
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Non-binary", "Other"],
+      required: true,
+    },
+    dateOfBirth: {
+      type: Date,
+      required: true,
+    },
+    bio: {
+      type: String,
+      maxlength: 500,
+    },
+    profilePictures: [
+      {
+        type: String,
+      },
+    ],
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number],
+        index: "2dsphere",
+      },
+    },
+    interests: [
+      {
+        type: String,
+      },
+    ],
+    preferences: {
+      gender: {
+        type: [String],
+        enum: ["Male", "Female", "Non-binary", "Other"],
+      },
+      ageRange: {
+        min: {
+          type: Number,
+          default: 18,
+        },
+        max: {
+          type: Number,
+          default: 100,
+        },
+      },
+      distance: {
+        type: Number,
+        default: 50, // in kilometers
+      },
+    },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    matches: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    themePreference: {
+      type: String,
+      enum: ["light", "dark", "system"],
+      default: "system",
+    },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    matches: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
     },
   },
-  otp: {
-    type: String,
-  },
-  otpExpires: {
-    type: Date,
-  },
-  status: {
-    type: String,
-    enum: ["pending", "active"],
-    default: "pending",
-  },
-  created_at: {
-    type: Date,
-    default: Date.now,
-  },
-  updated_at: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-userSchema.index({ location: "2dsphere" });
-
-const User = mongoose.model("User", userSchema);
-module.exports = User;
+module.exports = mongoose.model("User", UserSchema);
