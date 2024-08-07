@@ -16,6 +16,7 @@ const newMessages = async (req, res) => {
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };
+
 const getMessage = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -28,6 +29,7 @@ const getMessage = async (req, res) => {
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };
+
 const updateMessage = async () => {
   try {
     const { id } = req.params;

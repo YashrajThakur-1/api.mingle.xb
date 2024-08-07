@@ -11,6 +11,7 @@ const {
   getUserLikes,
   likeUser,
   getUserMatches,
+  filterAndGetUser,
 } = require("../controller/authcontroller.js");
 
 const upload = require("../middleware/fileUpload");
@@ -35,4 +36,6 @@ router.delete("/user/:userId", jsonAuthMiddleware, deleteUser); // Route to dele
 router.post("/:userId/like/:likedUserId", jsonAuthMiddleware, likeUser);
 router.get("/:userId/likes", jsonAuthMiddleware, getUserLikes);
 router.get("/:userId/matches", jsonAuthMiddleware, getUserMatches);
+router.post("/user/filter", jsonAuthMiddleware, filterAndGetUser);
+
 module.exports = router;

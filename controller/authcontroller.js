@@ -274,14 +274,34 @@ const getUserMatches = async (req, res) => {
   try {
     const user = await User.findById(userId).populate(
       "matches",
-      "full_name email"
+      "full_name email interests"
     );
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json(user.matches);
+    // Find users with at least 2 matching interests
+    const matches = await User.find({
+      _id: { $ne: userId }, // Exclude the current user
+      interests: { $in: user.interests }, // Match users with at least 2 common interests
+    });
+
+    // Filter out matches with fewer than 2 common interests
+    const filteredMatches = matches.filter((match) => {
+      const commonInterests = match.interests.filter((interest) =>
+        user.interests.includes(interest)
+      );
+      return commonInterests.length >= 2;
+    });
+
+    res.status(200).json(
+      filteredMatches.map((match) => ({
+        full_name: match.full_name,
+        email: match.email,
+        interests: match.interests,
+      }))
+    );
   } catch (error) {
     console.error("Error:", error);
     res
@@ -289,6 +309,79 @@ const getUserMatches = async (req, res) => {
       .json({ error: "Internal server error. Please try again later." });
   }
 };
+
+const filterAndGetUser = async (req, res) => {
+  const { minAge, maxAge, userId, distance, gender } = req.body;
+
+  try {
+    // Find the current user
+    const currentUser = await User.findById(userId);
+
+    if (!currentUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Calculate the age range
+    const currentYear = new Date().getFullYear();
+    const minDateOfBirth = new Date(currentYear - maxAge, 0, 1);
+    const maxDateOfBirth = new Date(currentYear - minAge, 11, 31);
+
+    // Build the query
+    const query = {
+      dateOfBirth: { $gte: minDateOfBirth, $lte: maxDateOfBirth },
+      _id: { $ne: userId }, // Exclude the current user
+    };
+
+    if (gender) {
+      query.gender = gender;
+    }
+
+    // Find users matching the query
+    let users = await User.find(query);
+
+    // Filter users by distance
+    if (distance && currentUser.location && currentUser.location.coordinates) {
+      const [currentLat, currentLng] = currentUser.location.coordinates;
+      const maxDistance = distance * 1000; // Convert km to meters
+
+      const getDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371; // Radius of the Earth in km
+        const dLat = ((lat2 - lat1) * Math.PI) / 180;
+        const dLon = ((lon2 - lon1) * Math.PI) / 180;
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos((lat1 * Math.PI) / 180) *
+            Math.cos((lat2 * Math.PI) / 180) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c * 1000; // Distance in meters
+      };
+
+      users = users.filter((user) => {
+        if (user.location && user.location.coordinates) {
+          const [userLat, userLng] = user.location.coordinates;
+          const userDistance = getDistance(
+            currentLat,
+            currentLng,
+            userLat,
+            userLng
+          );
+          return userDistance <= maxDistance;
+        }
+        return false;
+      });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
+  }
+};
+
 module.exports = {
   registerUser,
   verifyOtp,
@@ -300,4 +393,5 @@ module.exports = {
   getUserMatches,
   getUserLikes,
   likeUser,
+  filterAndGetUser,
 };
