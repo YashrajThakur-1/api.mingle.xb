@@ -32,6 +32,7 @@ const io = socketIo(http, {
     credentials: true,
   },
 });
+
 io.on("sendMessage", async (data) => {
   try {
     console.log("sendMessage event received with data:", data);
@@ -48,7 +49,9 @@ io.on("sendMessage", async (data) => {
     console.error("Error sending message:", error);
   }
 });
+
 //Routes Manage
+
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", messageroutes);
 

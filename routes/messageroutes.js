@@ -19,6 +19,6 @@ router.get("/messages/:userId", jsonAuthMiddleware, getMessage);
 router.put("/message/:id", jsonAuthMiddleware, updateMessage);
 
 // Delete a message
-router.delete("/message/:id", jsonAuthMiddleware, deleteMessage);
+router.delete("/message:id", jsonAuthMiddleware, deleteMessage);
 
 module.exports = router;
