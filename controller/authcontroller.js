@@ -15,7 +15,6 @@ const registerUser = async (req, res) => {
     gender,
     bio,
     interests,
-    location,
   } = req.body;
 
   const otp = generateVerificationCode();
@@ -36,7 +35,6 @@ const registerUser = async (req, res) => {
     gender,
     bio,
     interests,
-    location,
     otp,
     otpExpires,
   });
@@ -51,7 +49,7 @@ const registerUser = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error:", error.message);
     res
       .status(500)
       .json({ error: "Internal server error. Please try again later." });
