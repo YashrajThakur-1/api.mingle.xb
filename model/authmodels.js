@@ -17,7 +17,6 @@ const userSchema = new Schema({
   ],
   otp: { type: String }, // Add this field for OTP
   otpExpires: { type: Date }, // Add this field for OTP expiration time
-
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   matches: [{ type: Schema.Types.ObjectId, ref: "User" }],
   isActive: { type: Boolean, default: false },

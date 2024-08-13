@@ -12,6 +12,7 @@ const {
   likeUser,
   getUserMatches,
   filterAndGetUser,
+  getAlluser,
 } = require("../controller/authcontroller.js");
 
 const upload = require("../middleware/fileUpload");
@@ -22,6 +23,7 @@ router.post("/register", registerUser);
 router.post("/verify-otp", verifyOtp);
 router.post("/login", loginUser);
 router.post("/resend-otp", resendOtp);
+router.post("/users", getAlluser);
 
 // User Management Routes
 router.get("/user/:userId", jsonAuthMiddleware, getUserDetails); // Route to get user details

@@ -197,6 +197,21 @@ const updateUserDetails = async (req, res) => {
   }
 };
 
+// Get all User For The like
+
+const getAlluser = async (req, res) => {
+  try {
+    const data = await User.findOne({ isActive: true });
+
+    res.status(200).json({ data: data });
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
+  }
+};
+
 // Delete User
 const deleteUser = async (req, res) => {
   const { userId } = req.params;
@@ -398,5 +413,6 @@ module.exports = {
   getUserMatches,
   getUserLikes,
   likeUser,
+  getAlluser,
   filterAndGetUser,
 };
