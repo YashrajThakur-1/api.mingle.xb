@@ -23,7 +23,7 @@ router.post("/register", registerUser);
 router.post("/verify-otp", verifyOtp);
 router.post("/login", loginUser);
 router.post("/resend-otp", resendOtp);
-router.post("/users", getAlluser);
+router.post("/users", jsonAuthMiddleware, getAlluser);
 
 // User Management Routes
 router.get("/user/:userId", jsonAuthMiddleware, getUserDetails); // Route to get user details

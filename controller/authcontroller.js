@@ -42,7 +42,7 @@ const registerUser = async (req, res) => {
   try {
     await user.save();
     await sendMail(email, otp);
-    const token = generateToken(user._id);
+    const token = generateToken(user);
     res.status(201).json({
       message:
         "User registered successfully. Please check your email for the OTP.",
@@ -201,7 +201,13 @@ const updateUserDetails = async (req, res) => {
 
 const getAlluser = async (req, res) => {
   try {
-    const data = await User.findOne({ isActive: true });
+    const userLoginSkip = req.user.userData._id;
+
+    // Find all active users except the one with the userLoginSkip ID
+    const data = await User.find({
+      isActive: true,
+      _id: { $ne: userLoginSkip },
+    });
 
     res.status(200).json({ data: data });
   } catch (error) {
