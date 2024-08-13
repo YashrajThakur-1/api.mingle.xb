@@ -24,10 +24,10 @@ const UserSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: ["Male", "Female", "Non-binary", "Other"],
+      enum: ["male", "female", "Other"],
       required: true,
     },
-    dateOfBirth: {
+    date_of_birth: {
       type: Date,
       required: true,
     },
