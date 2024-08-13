@@ -238,8 +238,9 @@ const deleteUser = async (req, res) => {
   }
 };
 const likeUser = async (req, res) => {
-  const { userId, likedUserId } = req.params;
-
+  const { likedUserId } = req.params;
+  const userId = req.user.userData._id;
+  console.log(req.user);
   try {
     const user = await User.findById(userId);
     const likedUser = await User.findById(likedUserId);
@@ -275,10 +276,7 @@ const getUserLikes = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const user = await User.findById(userId).populate(
-      "likes",
-      "full_name email"
-    );
+    const user = await User.findById(userId).populate("likes"); // Populating without specific fields
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });

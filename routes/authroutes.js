@@ -35,7 +35,7 @@ router.put(
 ); // Route to update user details
 router.delete("/user/:userId", jsonAuthMiddleware, deleteUser); // Route to delete user
 //Like Matches
-router.post("/:userId/like/:likedUserId", jsonAuthMiddleware, likeUser);
+router.post("/like/:likedUserId", jsonAuthMiddleware, likeUser);
 router.get("/:userId/likes", jsonAuthMiddleware, getUserLikes);
 router.get("/:userId/matches", jsonAuthMiddleware, getUserMatches);
 router.post("/user/filter", jsonAuthMiddleware, filterAndGetUser);
