@@ -20,7 +20,14 @@ const registerUser = async (req, res) => {
 
   const otp = generateVerificationCode();
   const otpExpires = new Date(Date.now() + 90 * 1000); // OTP expires in 90 seconds
-
+  let check_email = await User.findOne({ email });
+  if (check_email) {
+    return res.status(400).json({ msg: "Email already exists" });
+  }
+  let check_phone_number = await User.findOne({ phone_number });
+  if (check_phone_number) {
+    return res.status(400).json({ msg: "Phone number already exists" });
+  }
   const user = new User({
     full_name,
     email,
