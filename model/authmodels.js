@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
   {
-    username: {
+    full_name: {
       type: String,
       required: true,
       unique: true,
@@ -15,15 +15,12 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     firstName: {
       type: String,
-      required: true,
     },
     lastName: {
       type: String,
-      required: true,
     },
     gender: {
       type: String,
@@ -93,12 +90,7 @@ const UserSchema = new Schema(
     ],
     isActive: {
       type: Boolean,
-      default: true,
-    },
-    themePreference: {
-      type: String,
-      enum: ["light", "dark", "system"],
-      default: "system",
+      default: false,
     },
   },
   {

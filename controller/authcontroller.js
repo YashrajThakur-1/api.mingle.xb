@@ -96,7 +96,7 @@ const verifyOtp = async (req, res) => {
       return res.status(400).json({ error: "Invalid or expired OTP" });
     }
 
-    user.status = "active";
+    user.isActive = true;
     user.otp = undefined;
     user.otpExpires = undefined;
     await user.save();
