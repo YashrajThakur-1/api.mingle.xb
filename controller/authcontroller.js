@@ -47,6 +47,7 @@ const registerUser = async (req, res) => {
       message:
         "User registered successfully. Please check your email for the OTP.",
       token,
+      status: true,
     });
   } catch (error) {
     console.error("Error:", error.message);
@@ -77,6 +78,7 @@ const resendOtp = async (req, res) => {
     await sendMail(email, otp);
     res.status(200).json({
       message: "OTP resent to your email. Please check your email for the OTP.",
+      status: true,
     });
   } catch (error) {
     console.error("Error:", error);
@@ -106,7 +108,9 @@ const verifyOtp = async (req, res) => {
     user.otpExpires = undefined;
     await user.save();
 
-    res.status(200).json({ message: "Email verified successfully" });
+    res
+      .status(200)
+      .json({ message: "Email verified successfully", status: true });
   } catch (error) {
     console.error("Error:", error);
     res
@@ -138,6 +142,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({
       token,
       message: "OTP sent to your email. Please check your email for the OTP.",
+      status: true,
     });
   } catch (error) {
     console.error("Error:", error);
@@ -155,7 +160,7 @@ const getUserDetails = async (req, res) => {
     const user = await User.findById(userId).select("-otp -otpExpires"); // Exclude sensitive fields
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "User not found", status: true });
     }
 
     res.status(200).json(user);
@@ -188,7 +193,9 @@ const updateUserDetails = async (req, res) => {
     Object.assign(user, updates);
     await user.save();
 
-    res.status(200).json({ message: "User details updated successfully" });
+    res
+      .status(200)
+      .json({ message: "User details updated successfully", status: true });
   } catch (error) {
     console.error("Error:", error);
     res
@@ -209,7 +216,7 @@ const getAlluser = async (req, res) => {
       _id: { $ne: userLoginSkip },
     });
 
-    res.status(200).json({ data: data });
+    res.status(200).json({ data: data, status: true });
   } catch (error) {
     console.error("Error:", error);
     res
@@ -229,7 +236,9 @@ const deleteUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json({ message: "User deleted successfully" });
+    res
+      .status(200)
+      .json({ message: "User deleted successfully", status: true });
   } catch (error) {
     console.error("Error:", error);
     res
@@ -262,7 +271,7 @@ const likeUser = async (req, res) => {
       await likedUser.save();
     }
 
-    res.status(200).json({ message: "User liked successfully" });
+    res.status(200).json({ message: "User liked successfully", status: true });
   } catch (error) {
     console.error("Error:", error);
     res
@@ -282,7 +291,7 @@ const getUserLikes = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json(user.likes);
+    res.status(200).json({ data: user.likes, status: true });
   } catch (error) {
     console.error("Error:", error);
     res
@@ -397,7 +406,7 @@ const filterAndGetUser = async (req, res) => {
       });
     }
 
-    res.status(200).json(users);
+    res.status(200).json({ data: users, status: true });
   } catch (error) {
     console.error("Error:", error);
     res

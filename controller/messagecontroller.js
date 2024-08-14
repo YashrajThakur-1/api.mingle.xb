@@ -10,7 +10,9 @@ const newMessages = async (req, res) => {
       message,
     });
     await newMessage.save();
-    res.status(200).json({ data: newMessage, msg: "Message sent" });
+    res
+      .status(200)
+      .json({ data: newMessage, msg: "Message sent", status: true });
   } catch (error) {
     console.error("Error posting message:", error);
     res.status(500).json({ msg: "Internal Server Error" });
@@ -23,7 +25,7 @@ const getMessage = async (req, res) => {
     const messages = await Message.find({
       $or: [{ sender: userId }, { receiver: userId }],
     });
-    res.status(200).json({ data: messages });
+    res.status(200).json({ data: messages, status: true });
   } catch (error) {
     console.error("Error fetching messages:", error);
     res.status(500).json({ msg: "Internal Server Error" });
@@ -40,9 +42,11 @@ const updateMessage = async () => {
       { new: true }
     );
     if (!updatedMessage) {
-      return res.status(404).json({ msg: "Message not found" });
+      return res.status(404).json({ msg: "Message not found", status: false });
     }
-    res.status(200).json({ data: updatedMessage, msg: "Message updated" });
+    res
+      .status(200)
+      .json({ data: updatedMessage, msg: "Message updated", status: true });
   } catch (error) {
     console.error("Error updating message:", error);
     res.status(500).json({ msg: "Internal Server Error" });
