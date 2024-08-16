@@ -16,6 +16,16 @@ const userSchema = new Schema({
       type: String,
     },
   ],
+  location: [
+    {
+      latitude: {
+        type: String,
+      },
+      longitude: {
+        type: String,
+      },
+    },
+  ],
   otp: { type: String }, // Add this field for OTP
   otpExpires: { type: Date }, // Add this field for OTP expiration time
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],

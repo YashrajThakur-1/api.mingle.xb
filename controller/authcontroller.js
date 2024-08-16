@@ -361,7 +361,7 @@ const filterAndGetUser = async (req, res) => {
 
     // Build the query
     const query = {
-      dateOfBirth: { $gte: minDateOfBirth, $lte: maxDateOfBirth },
+      date_of_birth: { $gte: minDateOfBirth, $lte: maxDateOfBirth },
       _id: { $ne: userId }, // Exclude the current user
     };
 
@@ -373,8 +373,9 @@ const filterAndGetUser = async (req, res) => {
     let users = await User.find(query);
 
     // Filter users by distance
-    if (distance && currentUser.location && currentUser.location.coordinates) {
-      const [currentLat, currentLng] = currentUser.location.coordinates;
+    if (distance && currentUser.location && currentUser.location.length > 0) {
+      const currentLat = parseFloat(currentUser.location[0].latitude);
+      const currentLng = parseFloat(currentUser.location[0].longitude);
       const maxDistance = distance * 1000; // Convert km to meters
 
       const getDistance = (lat1, lon1, lat2, lon2) => {
@@ -392,8 +393,9 @@ const filterAndGetUser = async (req, res) => {
       };
 
       users = users.filter((user) => {
-        if (user.location && user.location.coordinates) {
-          const [userLat, userLng] = user.location.coordinates;
+        if (user.location && user.location.length > 0) {
+          const userLat = parseFloat(user.location[0].latitude);
+          const userLng = parseFloat(user.location[0].longitude);
           const userDistance = getDistance(
             currentLat,
             currentLng,
