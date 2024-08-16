@@ -130,7 +130,7 @@ const loginUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const token = generateToken(user._id);
+    const token = generateToken(user);
     const otp = generateVerificationCode();
     const otpExpires = new Date(Date.now() + 90 * 1000); // OTP expires in 90 seconds
 
@@ -154,7 +154,7 @@ const loginUser = async (req, res) => {
 
 // Get User Details
 const getUserDetails = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user.userData._id;
 
   try {
     const user = await User.findById(userId).select("-otp -otpExpires"); // Exclude sensitive fields

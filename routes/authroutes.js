@@ -26,7 +26,7 @@ router.post("/resend-otp", resendOtp);
 router.get("/users", jsonAuthMiddleware, getAlluser);
 
 // User Management Routes
-router.get("/user/:userId", jsonAuthMiddleware, getUserDetails); // Route to get user details
+router.get("/singleuser", jsonAuthMiddleware, getUserDetails); // Route to get user details
 router.put(
   "/user/:userId",
   jsonAuthMiddleware,
