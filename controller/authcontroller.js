@@ -177,15 +177,22 @@ const updateUserDetails = async (req, res) => {
   const { userId } = req.params;
   const updates = req.body;
 
-  // Check if a profile picture is uploaded
-  if (req.file) {
-    updates.profile_picture = req.file.filename; // Save the file path in the database
-  }
-
   try {
+    // Log the incoming request
+    console.log(`Received request to update user with ID: ${userId}`);
+    console.log("Request body:", updates);
+
+    // Check if a profile picture is uploaded
+    if (req.file) {
+      updates.profile_picture = req.file.filename; // Save the file path in the database
+      console.log("Profile picture uploaded:", req.file.filename);
+    }
+
+    // Find the user by ID
     const user = await User.findById(userId);
 
     if (!user) {
+      console.error(`User with ID: ${userId} not found`);
       return res.status(404).json({ error: "User not found" });
     }
 
@@ -193,11 +200,12 @@ const updateUserDetails = async (req, res) => {
     Object.assign(user, updates);
     await user.save();
 
+    console.log(`User with ID: ${userId} updated successfully`);
     res
       .status(200)
       .json({ message: "User details updated successfully", status: true });
   } catch (error) {
-    console.error("Error:", error);
+    console.error(`Error updating user with ID: ${userId}`, error);
     res
       .status(500)
       .json({ error: "Internal server error. Please try again later." });
