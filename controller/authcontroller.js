@@ -1,4 +1,5 @@
 const User = require("../model/authmodels.js");
+const moment = require("moment");
 const {
   generateVerificationCode,
   generateToken,
@@ -6,6 +7,21 @@ const {
 const sendMail = require("../middleware/sendMail.js");
 
 // Register User
+const calculateAge = (dateOfBirth) => {
+  const today = new Date();
+  const birthDate = new Date(dateOfBirth);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+
+  if (
+    monthDifference < 0 ||
+    (monthDifference === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+  return age;
+};
+
 const registerUser = async (req, res) => {
   const {
     full_name,
@@ -17,21 +33,26 @@ const registerUser = async (req, res) => {
     interests,
   } = req.body;
 
+  const age = calculateAge(date_of_birth);
   const otp = generateVerificationCode();
   const otpExpires = new Date(Date.now() + 90 * 1000); // OTP expires in 90 seconds
+
   let check_email = await User.findOne({ email });
   if (check_email) {
     return res.status(400).json({ msg: "Email already exists" });
   }
+
   let check_phone_number = await User.findOne({ phone_number });
   if (check_phone_number) {
     return res.status(400).json({ msg: "Phone number already exists" });
   }
+
   const user = new User({
     full_name,
     email,
     phone_number,
     date_of_birth,
+    age,
     gender,
     bio,
     interests,
