@@ -1,5 +1,4 @@
 const User = require("../model/authmodels.js");
-const moment = require("moment");
 const {
   generateVerificationCode,
   generateToken,
