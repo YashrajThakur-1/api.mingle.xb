@@ -274,6 +274,7 @@ const deleteUser = async (req, res) => {
       .json({ error: "Internal server error. Please try again later." });
   }
 };
+
 const likeUser = async (req, res) => {
   const { likedUserId } = req.params;
   const userId = req.user.userData._id;
