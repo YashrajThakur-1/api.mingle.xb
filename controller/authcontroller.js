@@ -194,7 +194,7 @@ const getUserDetails = async (req, res) => {
 
 // Update User Details
 const updateUserDetails = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user.userData._id;
   const updates = req.body;
 
   try {

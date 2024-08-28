@@ -28,7 +28,7 @@ router.get("/users", jsonAuthMiddleware, getAlluser);
 // User Management Routes
 router.get("/singleuser", jsonAuthMiddleware, getUserDetails); // Route to get user details
 router.put(
-  "/user/:userId",
+  "/user",
   jsonAuthMiddleware,
   upload.single("profile_picture"),
   updateUserDetails
