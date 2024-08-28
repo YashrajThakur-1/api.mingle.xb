@@ -33,7 +33,7 @@ router.put(
   upload.single("profile_picture"),
   updateUserDetails
 ); // Route to update user details
-router.delete("/user/:userId", jsonAuthMiddleware, deleteUser); // Route to delete user
+router.delete("/user", jsonAuthMiddleware, deleteUser); // Route to delete user
 //Like Matches
 router.post("/like/:likedUserId", jsonAuthMiddleware, likeUser);
 router.get("/:userId/likes", jsonAuthMiddleware, getUserLikes);

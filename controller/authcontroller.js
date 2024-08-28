@@ -255,8 +255,7 @@ const getAlluser = async (req, res) => {
 
 // Delete User
 const deleteUser = async (req, res) => {
-  const { userId } = req.params;
-
+  const userId = req.user.userData._id;
   try {
     const user = await User.findByIdAndDelete(userId);
 
